@@ -17,10 +17,4 @@ require('yargs')
 /**
  *  Internal testing:
  *  node ./strap.js plugin
- *  node ./strap.js plugin "projectName:Cool Plugin" "description:Test the plugin" "pluginVersion:1.0.0" license:MIT "author:The Dev Company" authorEmail:hello@dev-company.com url:www.dev-company.com wpCli:Y wpRest:Y wpCron:Y webpack:Y codesniffer:Y codeception:Y travisCi:Y
- *  No WP CLI: node ./strap.js plugin "projectName:Cool Plugin" "description:Test the plugin" "pluginVersion:1.0.0" license:MIT "author:The Dev Company" authorEmail:hello@dev-company.com url:www.dev-company.com wpRest:Y wpCron:Y webpack:Y codesniffer:Y codeception:Y travisCi:Y
- *  No CodeSniffer: node ./strap.js plugin "projectName:Cool Plugin" "description:Test the plugin" "pluginVersion:1.0.0" license:MIT "author:The Dev Company" authorEmail:hello@dev-company.com url:www.dev-company.com wpCli:Y wpRest:Y wpCron:Y webpack:Y codeception:Y travisCi:Y
- *  No Codeception: node ./strap.js plugin "projectName:Cool Plugin" "description:Test the plugin" "pluginVersion:1.0.0" license:MIT "author:The Dev Company" authorEmail:hello@dev-company.com url:www.dev-company.com wpCli:Y wpRest:Y wpCron:Y webpack:Y codesniffer:Y travisCi:Y
- *  No TravisCI: node ./strap.js plugin "projectName:Cool Plugin" "description:Test the plugin" "pluginVersion:1.0.0" license:MIT "author:The Dev Company" authorEmail:hello@dev-company.com url:www.dev-company.com wpCli:Y wpRest:Y wpCron:Y webpack:Y codesniffer:Y codeception:Y
- *  No packages: node ./strap.js plugin "projectName:Cool Plugin" "description:Test the plugin" "pluginVersion:1.0.0" license:MIT "author:The Dev Company" authorEmail:hello@dev-company.com url:www.dev-company.com wpCli:Y wpRest:Y wpCron:Y webpack:Y
  */
