@@ -1,0 +1,46 @@
+{
+  "name": "wordpress-create-project",
+  "version": "1.0.0",
+  "author": "WP-Strap",
+  "license": "MIT",
+  "homepage": "https://github.com/wp-strap/wordpress-create-project",
+  "description": "A setup script to facilitate and kickstart a WordPress project",
+  "keywords": [
+    "wordpress",
+    "workflow",
+    "boilerplate",
+    "setup",
+    "theme",
+    "plugin"
+  ],
+  "main": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wp-strap/wordpress-create-project.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wp-strap/wordpress-create-project/issues"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "bin": {
+    "strap-project": "./strap.js"
+  },
+  "dependencies": {
+    "chalk": "^2.4.1",
+    "del": "^5.0.0",
+    "figlet-promised": "^1.0.0",
+    "fs-extra": "^7.0.1",
+    "inquirer": "^7.0.0",
+    "node-emoji": "^1.8.1",
+    "ora": "^3.0.0",
+    "promisify-child-process": "^2.1.2",
+    "prompt-sync": "^4.1.6",
+    "replace-in-file": "^3.4.2",
+    "yargs": "^15.0.0"
+  },
+  "devDependencies": {
+    "jest": "^24.8.0"
+  }
+}
