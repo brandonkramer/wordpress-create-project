@@ -1,6 +1,6 @@
 {
-  "name": "wordpress-create-project",
-  "version": "0.5.0",
+  "name": "wp-strap",
+  "version": "0.5.2",
   "author": "WP-Strap",
   "license": "MIT",
   "homepage": "https://github.com/wp-strap/wordpress-create-project",

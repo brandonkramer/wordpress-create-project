@@ -63,24 +63,26 @@ exports.handler = async ( argv ) => {
     log.message( '' );
 
     /**
-     * Clone the git repo into the
+     * Clone the plugin git repo into the
      * project path and set next step
      */
     await terminal.install( {
-        describe: `${ terminal.step }. Operator is cloning repository`,
+        describe: `${ terminal.step }. Operator is cloning plugin repository`,
         event:    operator.getRepo( 'https://github.com/wp-strap/wordpress-plugin-boilerplate.git', projectPath ),
     } );
     terminal.setNextStep();
 
-    /**
-     * Install node dependencies
-     * and set next step
-     */
-    await terminal.install( {
-        describe: `${ terminal.step }. Operator is installing Webpack`,
-        event:    operator.install( 'webpack', projectPath ),
-    } );
-    terminal.setNextStep();
+    if ( promptedInfo.webpack === 'yes' ) {
+        /**
+         * Clone the webpack git repo into the
+         * project path and set next step
+         */
+        await terminal.install( {
+            describe: `${ terminal.step }. Operator is cloning webpack repository`,
+            event:    operator.getRepo( 'https://github.com/wp-strap/wordpress-webpack-workflow.git', projectPath + '/wordpress-webpack-workflow'),
+        } );
+        terminal.setNextStep();
+    }
 
     /**
      * Install node dependencies
@@ -91,12 +93,25 @@ exports.handler = async ( argv ) => {
         event:    scanner.searchReplace( promptedInfo, projectPath ),
     } );
     terminal.setNextStep();
+
+    if ( promptedInfo.webpack === 'yes' ) {
+        /**
+         * Install node dependencies
+         * and set next step
+         */
+        await terminal.install( {
+            describe: `${ terminal.step }. Operator is installing NPM dependencies, this may take a while..`,
+            event:    operator.install( 'webpack', projectPath ),
+        } );
+        terminal.setNextStep();
+    }
+
     /**
      * Install composer dependencies
      * and set next step
      */
     await terminal.install( {
-        describe: `${ terminal.step }. Operator is installing Composer `,
+        describe: `${ terminal.step }. Operator is installing Composer dependencies`,
         event:    operator.install( 'composer', projectPath ),
     } );
     terminal.setNextStep();

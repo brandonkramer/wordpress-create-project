@@ -98,7 +98,8 @@ exports.handler = async ( argv ) => {
     log.message( '----------------' );
     log.message( `${ log.validation( '✔' ) } Project is created!` );
     log.message( '' );
-    log.message( `You only need to "${ log.variable( 'cd' ) }" into the folder and do a "${ log.variable( 'npm install' ) }" in the terminal to install the dependencies and then you're ready to start.` );
+    log.message( `If you installed in the current folder then do a "${ log.variable( 'npm install' ) }" in the terminal to install the dependencies.` );
+    log.message( `If you installed in a new folder then "${ log.variable( 'cd' ) }" first into that folder prior to the installation.` );
     log.message( `You may want to configure the files in ${ log.variable( '/webpack/' ) } and ${ log.variable( 'webpack.config.js' ) } to better suite your needs.` );
     log.message( '' );
     log.message( `Please read the documentation ${ log.variable( 'https://github.com/wp-strap/wordpress-webpack-workflow' ) } if you run into any issues or if you have any questions.` );

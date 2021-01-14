@@ -76,7 +76,7 @@ class Operator {
                         // Prompt question
                         const answer = await inquirer.prompt( argument );
                         // fill in answer
-                        answers = { ...answers, ...answer };
+                        answers      = { ...answers, ...answer };
                     }
                 }
             }
@@ -108,12 +108,8 @@ class Operator {
 
     /**
      * Clones the repository to the project path
-     * @param repo
-     * @param folderName
-     * @param branch
-     * @returns {Promise<void>}
      */
-    async getRepo( repo, folderName, branch = '' ) {
+    async getRepo( repo, folderName, branch = '',  ) {
         const repoCommand = branch.length ? `-b ${ branch } ${ repo }` : repo;
         const command     = `git clone ${ repoCommand } "${ folderName }"`;
         return exec( command, { timeout: this.getRepoTimeout } );
@@ -130,7 +126,6 @@ class Operator {
         if ( what === 'webpack' ) {
             return exec( `cd "${ projectPath }" && npm install` );
         } else if ( what === 'composer' ) {
-            return '';
             return exec( `cd "${ projectPath }" && composer install --ignore-platform-reqs` );
         } else {
             logger.message( 'Operator does not know how to install ' + what + '...' );

@@ -41,6 +41,19 @@ class Scanner {
     }
 
     /**
+     * Removes folder
+     * @param folder
+     * @returns {Promise<void>}
+     */
+    async removeFolder( folder ) {
+        try {
+            await fs.remove( folder )
+        } catch ( err ) {
+            console.error( err )
+        }
+    }
+
+    /**
      * https://github.com/adamreisnz/replace-in-file
      * @param data
      * @param projectPath
@@ -71,10 +84,24 @@ class Scanner {
             packageJsonFile, /--bug-report '{{author_url}}'/g, `--bug-report '${ data.url }'`, projectPath
         );
         /**
-         * Rename the plugin entry file
+         * Rename the translation file
          */
         if ( await fs.pathExists( TranslationFile ) ) {
             fs.rename( TranslationFile, path.join( projectPath, 'languages', `${ data.package }.pot` ) );
+        }
+
+        /**
+         * Move the current folder if chosen
+         */
+        if ( data.folder === 'Current folder' ) {
+            await fs.move( projectPath + '/assets', './assets', console.error );
+            await fs.move( projectPath + '/webpack', './webpack', console.error );
+            await fs.move( projectPath + '/.gitignore', './.gitignore', console.error );
+            await fs.move( projectPath + '/package.json', './package.json', console.error );
+            await fs.move( projectPath + '/README.md', './README.md', console.error );
+            await fs.move( projectPath + '/webpack.config.js', './webpack.config.js', console.error );
+            await fs.move( projectPath + '/languages', './languages', console.error );
+            await this.removeFolder( projectPath )
         }
     }
 

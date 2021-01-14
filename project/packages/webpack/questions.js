@@ -41,6 +41,13 @@ const Questions = {
             how:  ( sourceArg ) => sourceArg.replace( /[^a-z0-9 -]/gi, '' ).toLowerCase().split( ' ' ).join( '-' ),
         },
     },
+    // Install into the current folder or as a new folder
+    folder: {
+        name:     'folder',
+        describe: 'Install Webpack into the current folder or as a new folder?',
+        type:     'list',
+        choices:  [ 'New folder', 'Current folder' ]
+    },
 };
 
 module.exports = {

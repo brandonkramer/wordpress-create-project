@@ -47,6 +47,19 @@ class Scanner {
     }
 
     /**
+     * Removes folder
+     * @param folder
+     * @returns {Promise<void>}
+     */
+    async removeFolder( folder ) {
+        try {
+            await fs.remove( folder )
+        } catch ( err ) {
+            console.error( err )
+        }
+    }
+
+    /**
      * https://github.com/adamreisnz/replace-in-file
      * @param data
      * @param projectPath
@@ -61,7 +74,8 @@ class Scanner {
             path.join( projectPath, 'classes', 'Compatibility', '**', '*.php' ),
             path.join( projectPath, 'classes', 'Config', '**', '*.php' ),
             path.join( projectPath, 'classes', 'Integrations', '**', '*.php' ),
-            path.join( projectPath, 'templates', '*.php' )
+            path.join( projectPath, 'templates', '*.php' ),
+            path.join( projectPath, 'languages', 'the-plugin-name-text-domain.pot' )
         ];
         const codeceptionFiles = [
             path.join( projectPath, 'tests', 'wpunit.suite.yml' ),
@@ -120,7 +134,7 @@ class Scanner {
              */
             await this.replacer(  // PHP plugin meta text domain in "the-plugin-name.php"
                 phpFiles,
-                /^ \* Text Domain:.*$/m, ` * Text Domain:     ${ data.package + '-text-domain' }`, projectPath
+                /^ \* Text Domain:.*$/m, ` * Text Domain:     ${ data.package }`, projectPath
             );
             await this.replacer(  // PHP plugin meta text namespace in "the-plugin-name.php"
                 phpFiles,
@@ -130,7 +144,7 @@ class Scanner {
              * Translation functions
              */
             await this.replacer(  // text domain in translation functions
-                phpFiles, /the-plugin-name-text-domain/g, `${ data.package + '-text-domain' }`, projectPath
+                phpFiles, /the-plugin-name-text-domain/g, `${ data.package }`, projectPath
             );
             /**
              * Namespace
@@ -207,7 +221,7 @@ class Scanner {
                 codesnifferFiles, /<file>the-plugin-name.php<\/file>/g, `<file>${ data.package }.php</file>`, projectPath
             );
             await this.replacer(
-                codesnifferFiles, /<element value="the-plugin-name-text-domain"\/>/g, `<element value="${ data.package }-text-domain"/>`, projectPath
+                codesnifferFiles, /<element value="the-plugin-name-text-domain"\/>/g, `<element value="${ data.package }"/>`, projectPath
             );
         } else {
             // delete files and folders if not needed
@@ -231,24 +245,6 @@ class Scanner {
          */
         await this.replacer(
             composerFile, /ThePluginName\\/g, `${ data.namespace }\\`, projectPath
-        );
-        await this.replacer(
-            composerFile, /wpstrap\/wordpress-plugin-boilerplate/g, `${ data.vendor }/${ data.package }`, projectPath
-        );
-        await this.replacer(
-            composerFile, /Wordpress Plugin Boilerplate/g, `${ data.description }`, projectPath
-        );
-        await this.replacer(
-            composerFile, /0\.1\.1/g, `${ data.pluginVersion }`, projectPath
-        );
-        await this.replacer(
-            composerFile, /https:\/\/wp-strap.com/g, `https://${ data.url }`, projectPath
-        );
-        await this.replacer(
-            composerFile, /WP-Strap/g, `${ data.author }`, projectPath
-        );
-        await this.replacer(
-            composerFile, /hello@wp-strap.com/g, `${ data.authorEmail }`, projectPath
         );
 
         /**
@@ -291,6 +287,52 @@ class Scanner {
          */
         if ( await fs.pathExists( pathEntryFile ) ) {
             fs.rename( pathEntryFile, path.join( projectPath, `${ data.package }.php` ) );
+        }
+
+        /**
+         * If webpack is included then move them to the right spot
+         */
+        if ( data.webpack === 'yes' ) {
+            const packageJsonFile = path.join( projectPath, 'package.json' );
+            await fs.move( projectPath + '/wordpress-webpack-workflow/assets/src', projectPath + '/assets/src' );
+            await fs.move( projectPath + '/wordpress-webpack-workflow/webpack', projectPath + '/webpack' );
+            await fs.move( projectPath + '/wordpress-webpack-workflow/package.json', projectPath + '/package.json' );
+            await fs.move( projectPath + '/wordpress-webpack-workflow/webpack.config.js', projectPath + '/webpack.config.js' );
+            await this.removeFolder( projectPath + '/wordpress-webpack-workflow/' );
+            /**
+             * Package.json
+             */
+            await this.replacer( // translation --dest-file
+                packageJsonFile, /languages\/wordpress-webpack.pot/g, `languages/${ data.package }.pot`, projectPath
+            );
+            await this.replacer( // translation --package
+                packageJsonFile, /--package 'wordpress-webpack'/g, `--package '${ data.package }'`, projectPath
+            );
+            await this.replacer( // translation --domain
+                packageJsonFile, /--domain 'wordpress-webpack-text-domain'/g, `--domain '${ data.package }'`, projectPath
+            );
+            await this.replacer( // translation --last-translator
+                packageJsonFile, /--last-translator '{{author_name}} <{{author_email}}>'/g, `--last-translator '${ data.author } <${ data.authorEmail }>'`, projectPath
+            );
+            await this.replacer( // translation --team
+                packageJsonFile, /--team '{{author_name}} <{{author_email}}>'/g, `--team '${ data.author } <${ data.authorEmail }>'`, projectPath
+            );
+            await this.replacer( // translation --bug-report
+                packageJsonFile, /--bug-report '{{author_url}}'/g, `--bug-report '${ data.url }'`, projectPath
+            );
+        }
+        const TranslationFile = path.join( projectPath, 'languages', 'the-plugin-name-text-domain.pot' );
+        /**
+         * Change translation file
+         */
+        await this.replacer(
+            TranslationFile, /the-plugin-name.php/g, `${ data.package }.php`, projectPath
+        );
+        /**
+         * Rename the translation file
+         */
+        if ( await fs.pathExists( TranslationFile ) ) {
+            fs.rename( TranslationFile, path.join( projectPath, 'languages', `${ data.package }.pot` ) );
         }
     }
 }
