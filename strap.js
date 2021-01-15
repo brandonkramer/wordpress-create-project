@@ -17,4 +17,7 @@ require('yargs')
 /**
  *  Internal testing:
  *  node ./strap.js plugin
+ *  node ./strap.js plugin "projectName:Cool Plugin" "description:Test the plugin" "pluginVersion:1.0.0" license:MIT "author:The Dev Company" authorEmail:hello@dev-company.com url:www.dev-company.com webpack:Y codesniffer:Y codeception:Y travisCi:Y
+ *  node ./strap.js webpack
+ *  node ./strap.js webpack "projectName:Cool Plugin" "author:The Dev Company" authorEmail:hello@dev-company.com url:www.dev-company.com css:Sass+PostCSS
  */

@@ -62,6 +62,8 @@ class Scanner {
     async searchReplace( data, projectPath ) {
         const TranslationFile = path.join( projectPath, 'languages', 'wordpress-webpack.pot' );
         const packageJsonFile = path.join( projectPath, 'package.json' );
+        const webpackConfig   = path.join( projectPath, 'webpack.config.js' );
+        const jsFiles         = path.join( projectPath, 'assets', 'src', 'js', '**', '*.js' );
         /**
          * Package.json
          */
@@ -69,10 +71,10 @@ class Scanner {
             packageJsonFile, /languages\/wordpress-webpack.pot/g, `languages/${ data.package }.pot`, projectPath
         );
         await this.replacer( // translation --package
-            packageJsonFile, /--package 'wordpress-webpack'/g, `--package '${ data.package }'`, projectPath
+            packageJsonFile, /--package '{{the-project-name}}'/g, `--package '${ data.package }'`, projectPath
         );
         await this.replacer( // translation --domain
-            packageJsonFile, /--domain 'wordpress-webpack-text-domain'/g, `--domain '${ data.package }-text-domain'`, projectPath
+            packageJsonFile, /--domain '{{the-project-text-domain}}'/g, `--domain '${ data.package }-text-domain'`, projectPath
         );
         await this.replacer( // translation --last-translator
             packageJsonFile, /--last-translator '{{author_name}} <{{author_email}}>'/g, `--last-translator '${ data.author } <${ data.authorEmail }>'`, projectPath
@@ -91,16 +93,32 @@ class Scanner {
         }
 
         /**
+         * Change CSS type
+         */
+        if ( data.css === 'PostCSS-only' ) {
+            await this.replacer( // Change sass to postcss in webpack config
+                webpackConfig, /use:       'sass', \/\/ sass \|\| postcss/g, `use:       'postcss', // sass || postcss`, projectPath
+            );
+            await this.replacer( // Change CSS src folder
+                jsFiles, /\/sass\//g, `/postcss/`, projectPath
+            );
+            await this.replacer( // Change CSS file ext
+                jsFiles, /.scss/g, `.pcss`, projectPath
+            );
+        }
+        await this.removeFolder( projectPath + '/webpack/postcss-only' );
+
+        /**
          * Move the current folder if chosen
          */
         if ( data.folder === 'Current folder' ) {
-            await fs.move( projectPath + '/assets', './assets', console.error );
-            await fs.move( projectPath + '/webpack', './webpack', console.error );
-            await fs.move( projectPath + '/.gitignore', './.gitignore', console.error );
-            await fs.move( projectPath + '/package.json', './package.json', console.error );
-            await fs.move( projectPath + '/README.md', './README.md', console.error );
-            await fs.move( projectPath + '/webpack.config.js', './webpack.config.js', console.error );
-            await fs.move( projectPath + '/languages', './languages', console.error );
+            await fs.move( projectPath + '/assets', './assets' );
+            await fs.move( projectPath + '/webpack', './webpack' );
+            await fs.move( projectPath + '/.gitignore', './.gitignore' );
+            await fs.move( projectPath + '/package.json', './package.json' );
+            await fs.move( projectPath + '/README.md', './README.md' );
+            await fs.move( projectPath + '/webpack.config.js', './webpack.config.js' );
+            await fs.move( projectPath + '/languages', './languages' );
             await this.removeFolder( projectPath )
         }
     }

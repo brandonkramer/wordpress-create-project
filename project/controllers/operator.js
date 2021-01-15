@@ -45,12 +45,16 @@ class Operator {
      * Should prompt the user for all questions.
      * @param questions – Array of defined script arguments
      * @param argv
+     * @param skipSummary
      * @returns {Promise<{}>}
      */
-    async prompt( questions, argv ) {
+    async prompt( questions, argv, skipSummary = false ) {
         const logger = new Logger();
         let answers  = {};
         let confirm  = false;
+        if ( skipSummary === true ) {
+            confirm = true;
+        }
         do {
             for ( const argName in questions ) {
                 if ( Object.prototype.hasOwnProperty.call( questions, argName ) ) {
@@ -80,8 +84,10 @@ class Operator {
                     }
                 }
             }
-            confirm = await this.summary( answers );
-            logger.message( '' );
+            if ( skipSummary === false ) {
+                confirm = await this.summary( answers );
+                logger.message( '' );
+            }
         } while ( confirm !== true );
 
         return answers;
@@ -124,7 +130,7 @@ class Operator {
     async install( what, projectPath ) {
         const logger = new Logger();
         if ( what === 'webpack' ) {
-            return exec( `cd "${ projectPath }" && npm install` );
+            return exec( `cd "${ projectPath }" && yarn install` );
         } else if ( what === 'composer' ) {
             return exec( `cd "${ projectPath }" && composer install --ignore-platform-reqs` );
         } else {

@@ -140,6 +140,17 @@ const Questions = {
     },
 };
 
+const QuestionsWebpack = {
+    // Type of CSS
+    css: {
+        name:     'css',
+        describe: 'Use Sass+PostCSS or PostCSS-only?',
+        type:     'list',
+        choices:  [ 'Sass+PostCSS', 'PostCSS-only' ]
+    },
+}
+
 module.exports = {
     Questions,
+    QuestionsWebpack,
 };

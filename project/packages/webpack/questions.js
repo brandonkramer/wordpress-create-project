@@ -41,10 +41,17 @@ const Questions = {
             how:  ( sourceArg ) => sourceArg.replace( /[^a-z0-9 -]/gi, '' ).toLowerCase().split( ' ' ).join( '-' ),
         },
     },
+    // Type of CSS
+    css: {
+        name:     'css',
+        describe: 'Use Sass+PostCSS or PostCSS-only?',
+        type:     'list',
+        choices:  [ 'Sass+PostCSS', 'PostCSS-only' ]
+    },
     // Install into the current folder or as a new folder
     folder: {
         name:     'folder',
-        describe: 'Install Webpack into the current folder or as a new folder?',
+        describe: 'Install the Webpack workflow into the current folder or as a new folder?',
         type:     'list',
         choices:  [ 'New folder', 'Current folder' ]
     },

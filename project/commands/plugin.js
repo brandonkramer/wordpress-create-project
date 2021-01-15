@@ -21,7 +21,7 @@ const {
  */
 const {
           scanner:   { Scanner },
-          questions: { Questions },
+          questions: { Questions, QuestionsWebpack },
       } = require( '../packages/plugin' );
 
 /**
@@ -77,15 +77,26 @@ exports.handler = async ( argv ) => {
          * Clone the webpack git repo into the
          * project path and set next step
          */
+        await terminal.setPredefinedAnswers( QuestionsWebpack, argv );
         await terminal.install( {
             describe: `${ terminal.step }. Operator is cloning webpack repository`,
-            event:    operator.getRepo( 'https://github.com/wp-strap/wordpress-webpack-workflow.git', projectPath + '/wordpress-webpack-workflow'),
+            event:    operator.getRepo( 'https://github.com/wp-strap/wordpress-webpack-workflow.git', projectPath + '/wordpress-webpack-workflow' ),
+        } );
+        const promptedInfoWebpack = await operator.prompt( QuestionsWebpack, argv, true );
+        terminal.setNextStep();
+        /**
+         * Replacing webpack data
+         * and set next step
+         */
+        await terminal.install( {
+            describe: `${ terminal.step }. Operator is replacing webpack data`,
+            event:    scanner.searchReplaceWebPack( promptedInfoWebpack, projectPath ),
         } );
         terminal.setNextStep();
     }
 
     /**
-     * Install node dependencies
+     * Replacing plugin data
      * and set next step
      */
     await terminal.install( {
@@ -95,6 +106,7 @@ exports.handler = async ( argv ) => {
     terminal.setNextStep();
 
     if ( promptedInfo.webpack === 'yes' ) {
+
         /**
          * Install node dependencies
          * and set next step

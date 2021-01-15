@@ -60,6 +60,7 @@ exports.handler = async ( argv ) => {
      */
     const promptedInfo = await operator.prompt( Questions, argv );
     const projectPath  = path.join( scanner.getFullPath(), promptedInfo.package );
+    const currentPath  = scanner.getFullPath();
     log.message( '' );
 
     /**
@@ -83,6 +84,23 @@ exports.handler = async ( argv ) => {
     terminal.setNextStep();
 
     /**
+     * Install node dependencies
+     * and set next step
+     */
+    if ( promptedInfo.folder === 'Current folder' ) {
+        await terminal.install( {
+            describe: `${ terminal.step }. Operator is installing NPM dependencies, this may take a while..`,
+            event:    operator.install( 'webpack', currentPath ),
+        } );
+    } else {
+        await terminal.install( {
+            describe: `${ terminal.step }. Operator is installing NPM dependencies, this may take a while..`,
+            event:    operator.install( 'webpack', projectPath ),
+        } );
+    }
+    terminal.setNextStep();
+
+    /**
      * Install
      * and set next step
      */
@@ -98,9 +116,9 @@ exports.handler = async ( argv ) => {
     log.message( '----------------' );
     log.message( `${ log.validation( '✔' ) } Project is created!` );
     log.message( '' );
-    log.message( `If you installed in the current folder then do a "${ log.variable( 'npm install' ) }" in the terminal to install the dependencies.` );
-    log.message( `If you installed in a new folder then "${ log.variable( 'cd' ) }" first into that folder prior to the installation.` );
+    log.message( `Edit the BrowserSync settings in ${ log.variable( 'webpack.config.js' ) } if you want to make use of it.` );
     log.message( `You may want to configure the files in ${ log.variable( '/webpack/' ) } and ${ log.variable( 'webpack.config.js' ) } to better suite your needs.` );
+    log.message( `Run ${ log.variable( 'yarn dev' ) } / ${ log.variable( 'yarn dev:watch' ) } or ${ log.variable( 'yarn prod' ) } / ${ log.variable( 'yarn prod:watch' ) } to start the build process.` );
     log.message( '' );
     log.message( `Please read the documentation ${ log.variable( 'https://github.com/wp-strap/wordpress-webpack-workflow' ) } if you run into any issues or if you have any questions.` );
     log.message( '' );

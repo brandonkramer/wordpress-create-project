@@ -110,6 +110,9 @@ class Scanner {
             await this.replacer(  // Package name used in PHP doc @package for example
                 phpFiles, /{{the-plugin-name}}/g, `${ data.package }`, projectPath
             );
+            await this.replacer(  // Package name used in the webpack package.json in the translate script
+                phpFiles, /{{the-project-name}}/g, `${ data.package }`, projectPath
+            );
             await this.replacer(  // Plugin author used in PHP doc @author for example
                 phpFiles, /{{author_name}}/g, `${ data.author }`, projectPath
             );
@@ -306,10 +309,10 @@ class Scanner {
                 packageJsonFile, /languages\/wordpress-webpack.pot/g, `languages/${ data.package }.pot`, projectPath
             );
             await this.replacer( // translation --package
-                packageJsonFile, /--package 'wordpress-webpack'/g, `--package '${ data.package }'`, projectPath
+                packageJsonFile, /--package '{{the-project-name}}'/g, `--package '${ data.package }'`, projectPath
             );
             await this.replacer( // translation --domain
-                packageJsonFile, /--domain 'wordpress-webpack-text-domain'/g, `--domain '${ data.package }'`, projectPath
+                packageJsonFile, /--domain '{{the-project-text-domain}}'/g, `--domain '${ data.package }'`, projectPath
             );
             await this.replacer( // translation --last-translator
                 packageJsonFile, /--last-translator '{{author_name}} <{{author_email}}>'/g, `--last-translator '${ data.author } <${ data.authorEmail }>'`, projectPath
@@ -333,6 +336,32 @@ class Scanner {
          */
         if ( await fs.pathExists( TranslationFile ) ) {
             fs.rename( TranslationFile, path.join( projectPath, 'languages', `${ data.package }.pot` ) );
+        }
+    }
+
+    /**
+     * https://github.com/adamreisnz/replace-in-file
+     * @param data
+     * @param projectPath
+     * @returns {Promise<void>}
+     */
+    async searchReplaceWebPack( data, projectPath ) {
+        const webpackConfig   = path.join( projectPath, '/wordpress-webpack-workflow/webpack.config.js' );
+        const jsFiles         = path.join( projectPath, '/wordpress-webpack-workflow/assets', 'src', 'js', '**', '*.js' );
+
+        /**
+         * Change CSS type
+         */
+        if ( data.css === 'PostCSS-only' ) {
+            await this.replacer( // Change sass to postcss in webpack config
+                webpackConfig, /use:       'sass', \/\/ sass \|\| postcss/g, `use:       'postcss', // sass || postcss`, projectPath
+            );
+            await this.replacer( // Change CSS src folder
+                jsFiles, /\/sass\//g, `/postcss/`, projectPath
+            );
+            await this.replacer( // Change CSS file ext
+                jsFiles, /.scss/g, `.pcss`, projectPath
+            );
         }
     }
 }
