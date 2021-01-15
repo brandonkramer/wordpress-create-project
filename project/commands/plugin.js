@@ -146,6 +146,7 @@ exports.handler = async ( argv ) => {
     log.message( '' );
     log.message( 'The plugin data, namespace, prefixes has been changed according to your input.' );
     log.message( `If you use Codeception for testing then you need to configure your local testing environment in ${ log.variable( '.env.testing' ) }` );
+    log.message( `If you use webpack then edit the BrowserSync settings in ${ log.variable( 'webpack.config.js' ) } if you want to make use of it.` );
     log.message( '' );
     log.message( `Please read the documentation ${ log.variable( 'https://github.com/wp-strap/wordpress-plugin-boilerplate' ) } if you run into any issues or if you have any questions.` );
     log.message( '' );
