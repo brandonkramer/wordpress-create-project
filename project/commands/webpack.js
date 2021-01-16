@@ -116,7 +116,7 @@ exports.handler = async ( argv ) => {
     log.message( '----------------' );
     log.message( `${ log.validation( '✔' ) } Project is created!` );
     log.message( '' );
-    log.message( `Edit the BrowserSync settings in ${ log.variable( 'webpack.config.js' ) } if you want to make use of it.` );
+    log.message( `Edit the BrowserSync settings in ${ log.variable( 'webpack.config.js' ) } if you want to utilise it.` );
     log.message( `You may want to configure the files in ${ log.variable( '/webpack/' ) } and ${ log.variable( 'webpack.config.js' ) } to better suite your needs.` );
     log.message( `Run ${ log.variable( 'yarn dev' ) } / ${ log.variable( 'yarn dev:watch' ) } or ${ log.variable( 'yarn prod' ) } / ${ log.variable( 'yarn prod:watch' ) } to start the build process.` );
     log.message( '' );
