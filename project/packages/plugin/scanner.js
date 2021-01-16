@@ -68,12 +68,12 @@ class Scanner {
     async searchReplace( data, projectPath ) {
         const phpFiles         = [
             path.join( projectPath, 'the-plugin-name.php' ),
-            path.join( projectPath, 'classes', 'bootstrap.php' ),
-            path.join( projectPath, 'classes', 'App', '**', '*.php' ),
-            path.join( projectPath, 'classes', 'Common', '**', '*.php' ),
-            path.join( projectPath, 'classes', 'Compatibility', '**', '*.php' ),
-            path.join( projectPath, 'classes', 'Config', '**', '*.php' ),
-            path.join( projectPath, 'classes', 'Integrations', '**', '*.php' ),
+            path.join( projectPath, 'src', 'bootstrap.php' ),
+            path.join( projectPath, 'src', 'App', '**', '*.php' ),
+            path.join( projectPath, 'src', 'Common', '**', '*.php' ),
+            path.join( projectPath, 'src', 'Compatibility', '**', '*.php' ),
+            path.join( projectPath, 'src', 'Config', '**', '*.php' ),
+            path.join( projectPath, 'src', 'Integrations', '**', '*.php' ),
             path.join( projectPath, 'templates', '*.php' ),
             path.join( projectPath, 'languages', 'the-plugin-name-text-domain.pot' )
         ];
@@ -88,7 +88,7 @@ class Scanner {
         const travisCiFiles    = [
             path.join( projectPath, '.travis.yml' ),
         ];
-        const bootstrapFile    = path.join( projectPath, 'classes', 'bootstrap.php' );
+        const bootstrapFile    = path.join( projectPath, 'src', 'bootstrap.php' );
         const composerFile     = path.join( projectPath, 'composer.json' );
         const pathEntryFile    = path.join( projectPath, `the-plugin-name.php` );
 
@@ -167,10 +167,10 @@ class Scanner {
             await this.replacer(  // File or global variables with prefixes
                 phpFiles, /\$the_plugin_name_/g, `${ '$' + data.lowerCasePrefix + '_' }`, projectPath
             );
-            await this.replacer(  // Plugin database settings variable in classes/Config/Plugin.php
+            await this.replacer(  // Plugin database settings variable in src/Config/Plugin.php
                 phpFiles, /get_option\( 'the-plugin-name-/g, `${ 'get_option( \'' + data.package + '-' }`, projectPath
             );
-            await this.replacer(  // external template folder name in classes/Config/Plugin.php
+            await this.replacer(  // external template folder name in src/Config/Plugin.php
                 phpFiles, /=> 'the-plugin-name-templates/g, `${ '=> \'' + data.package + '-templates' }`, projectPath
             );
             await this.replacer(  // External function (only in the-plugin-name.php)
