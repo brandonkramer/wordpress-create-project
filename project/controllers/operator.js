@@ -65,7 +65,18 @@ class Operator {
                     if ( argument.skipPrompt ) {
                         // Check if the question should be skipped
                         continue;
-                    } else if ( argument.buildFrom ) {
+                    } 
+                    else if (argument.checkTimeout){
+                        // Check if the timeout select is a number value
+                        if(answers.gitTimeout !== 'custom') {
+                            continue;
+                        }
+                        // Otherwise warn user, and ask for a custom number
+                        const answer = await inquirer.prompt( argument );
+                        // Fill in gitTimeout answer with custom value
+                        answers.gitTimeout = answer.gitCustom;
+                    }
+                    else if ( argument.buildFrom ) {
                         // Check if the answer is being made automatically
                         const { how, name } = argument.buildFrom;
                         answers             = { ...answers, [ argument.name ]: how( answers[ name ] ) };
@@ -115,10 +126,10 @@ class Operator {
     /**
      * Clones the repository to the project path
      */
-    async getRepo( repo, folderName, branch = '',  ) {
+    async getRepo(gitTime, repo, folderName, branch = '') {
         const repoCommand = branch.length ? `-b ${ branch } ${ repo }` : repo;
         const command     = `git clone ${ repoCommand } "${ folderName }"`;
-        return exec( command, { timeout: this.getRepoTimeout } );
+        return exec( command, { timeout: gitTime } );
     }
 
     /**

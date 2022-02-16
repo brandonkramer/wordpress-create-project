@@ -93,10 +93,11 @@ class Terminal {
      * Do installation
      * @param describe
      * @param event
+     * @param timeout
      * @param isFatal
      * @returns {Promise<void>}
      */
-    async install( { describe, event, isFatal = true } ) {
+    async install( { describe, event, timeout, isFatal = true } ) {
         const spinner = ora( describe ).start();
         const log     = new Logger();
         if ( !event ) {
@@ -109,6 +110,9 @@ class Terminal {
             log.error( exception );
             if ( isFatal ) {
                 log.error( `'${ describe }' was a required step, exiting now.` );
+                if( timeout ){
+                    log.error( `git clone may have timed out. Your timeout setting is: '${ timeout }' milliseconds. Try again with a higher number.` );
+                }
                 process.exit( 1 );
             }
         } );

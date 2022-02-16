@@ -67,9 +67,12 @@ exports.handler = async ( argv ) => {
      * Clone the git repo into the
      * project path and set next step
      */
+     const gitTimeout = promptedInfo.gitTimeout;
+
     await terminal.install( {
         describe: `${ terminal.step }. Operator is cloning repository`,
-        event:    operator.getRepo( 'https://github.com/wp-strap/wordpress-webpack-workflow.git', projectPath ),
+        event:    operator.getRepo( gitTimeout, 'https://github.com/wp-strap/wordpress-webpack-workflow.git', projectPath ),
+        timeout: gitTimeout,
     } );
     terminal.setNextStep();
 
@@ -80,6 +83,7 @@ exports.handler = async ( argv ) => {
     await terminal.install( {
         describe: `${ terminal.step }. Operator is replacing project data with your input`,
         event:    scanner.searchReplace( promptedInfo, projectPath ),
+        timeout: false,
     } );
     terminal.setNextStep();
 
@@ -91,11 +95,13 @@ exports.handler = async ( argv ) => {
         await terminal.install( {
             describe: `${ terminal.step }. Operator is installing NPM dependencies, this may take a while..`,
             event:    operator.install( 'webpack', currentPath ),
+            timeout: false,
         } );
     } else {
         await terminal.install( {
             describe: `${ terminal.step }. Operator is installing NPM dependencies, this may take a while..`,
             event:    operator.install( 'webpack', projectPath ),
+            timeout: false,
         } );
     }
     terminal.setNextStep();
@@ -107,6 +113,7 @@ exports.handler = async ( argv ) => {
     await terminal.install( {
         describe: `${ terminal.step }. Operator is cleaning up`,
         event:    operator.cleanUp( projectPath ),
+        timeout: false,
     } );
     terminal.setNextStep();
 
