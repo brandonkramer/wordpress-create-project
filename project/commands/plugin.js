@@ -66,9 +66,11 @@ exports.handler = async ( argv ) => {
      * Clone the plugin git repo into the
      * project path and set next step
      */
+     const gitTimeout = promptedInfo.gitTimeout;
     await terminal.install( {
         describe: `${ terminal.step }. Operator is cloning plugin repository`,
-        event:    operator.getRepo( 'https://github.com/wp-strap/wordpress-plugin-boilerplate.git', projectPath ),
+        event:    operator.getRepo(gitTimeout, 'https://github.com/wp-strap/wordpress-plugin-boilerplate.git', projectPath),
+        timeout: gitTimeout,
     } );
     terminal.setNextStep();
 
@@ -80,7 +82,8 @@ exports.handler = async ( argv ) => {
         await terminal.setPredefinedAnswers( QuestionsWebpack, argv );
         await terminal.install( {
             describe: `${ terminal.step }. Operator is cloning webpack repository`,
-            event:    operator.getRepo( 'https://github.com/wp-strap/wordpress-webpack-workflow.git', projectPath + '/wordpress-webpack-workflow' ),
+            event:    operator.getRepo(gitTimeout, 'https://github.com/wp-strap/wordpress-webpack-workflow.git', projectPath + '/wordpress-webpack-workflow'),
+            timeout: gitTimeout,
         } );
         const promptedInfoWebpack = await operator.prompt( QuestionsWebpack, argv, true );
         terminal.setNextStep();
@@ -91,6 +94,7 @@ exports.handler = async ( argv ) => {
         await terminal.install( {
             describe: `${ terminal.step }. Operator is replacing webpack data`,
             event:    scanner.searchReplaceWebPack( promptedInfoWebpack, projectPath ),
+            timeout: false,
         } );
         terminal.setNextStep();
     }
@@ -102,6 +106,7 @@ exports.handler = async ( argv ) => {
     await terminal.install( {
         describe: `${ terminal.step }. Operator is replacing plugin data`,
         event:    scanner.searchReplace( promptedInfo, projectPath ),
+        timeout: false,
     } );
     terminal.setNextStep();
 
@@ -114,6 +119,7 @@ exports.handler = async ( argv ) => {
         await terminal.install( {
             describe: `${ terminal.step }. Operator is installing NPM dependencies, this may take a while..`,
             event:    operator.install( 'webpack', projectPath ),
+            timeout: false,
         } );
         terminal.setNextStep();
     }
@@ -125,6 +131,7 @@ exports.handler = async ( argv ) => {
     await terminal.install( {
         describe: `${ terminal.step }. Operator is installing Composer dependencies`,
         event:    operator.install( 'composer', projectPath ),
+        timeout: false,
     } );
     terminal.setNextStep();
 
@@ -135,6 +142,7 @@ exports.handler = async ( argv ) => {
     await terminal.install( {
         describe: `${ terminal.step }. Operator is cleaning up`,
         event:    operator.cleanUp( projectPath ),
+        timeout: false,
     } );
     terminal.setNextStep();
 

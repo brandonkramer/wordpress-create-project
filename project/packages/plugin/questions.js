@@ -3,6 +3,20 @@
  * @docs https://github.com/SBoudrias/Inquirer.js
  */
 const Questions = {
+    // Include webpack tooling files
+    gitTimeout: {
+        name: 'gitTimeout',
+        describe: 'How fast is your internet? This installer includes a git clone command, that may not complete in time on slower speeds.',
+        type: 'list',
+        choices: [{key: 'fast', name: 'Fast', value: 30000}, {key: 'standard', name: 'Standard', value: 45000}, {key: 'slow', name: 'Slow', value: 60000}, {key: 'slowest', name: 'Slowest', value: 75000}, {key: 'custom', name: 'Custom', value: 1}],
+      },
+      gitCustom: {
+        type: 'number',
+        name: 'gitCustom',
+        describe: 'Custom time should only be used as a last resort, as it will freeze the setup process until the timer is up. Enter in milliseconds:',
+        default: 80000,
+        checkTimeout: true,
+      },
     // Used for plugin name occurrences
     projectName: {
         type:     'text',
