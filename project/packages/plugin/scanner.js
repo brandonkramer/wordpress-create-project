@@ -68,7 +68,7 @@ class Scanner {
     async searchReplace( data, projectPath ) {
         const phpFiles         = [
             path.join( projectPath, 'the-plugin-name.php' ),
-            path.join( projectPath, 'src', 'bootstrap.php' ),
+            path.join( projectPath, 'src', 'Bootstrap.php' ),
             path.join( projectPath, 'src', 'App', '**', '*.php' ),
             path.join( projectPath, 'src', 'Common', '**', '*.php' ),
             path.join( projectPath, 'src', 'Compatibility', '**', '*.php' ),
@@ -88,7 +88,7 @@ class Scanner {
         const travisCiFiles    = [
             path.join( projectPath, '.travis.yml' ),
         ];
-        const bootstrapFile    = path.join( projectPath, 'src', 'bootstrap.php' );
+        const bootstrapFile    = path.join( projectPath, 'src', 'Bootstrap.php' );
         const composerFile     = path.join( projectPath, 'composer.json' );
         const pathEntryFile    = path.join( projectPath, `the-plugin-name.php` );
 
