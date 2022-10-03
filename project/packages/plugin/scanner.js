@@ -34,7 +34,7 @@ class Scanner {
      * @returns {Promise<*>}
      */
     async replacer( files, from, to, pathToFolder ) {
-        return replace( {
+        return replace.sync( {
             files:  files,
             from:   from,
             to:     to,
